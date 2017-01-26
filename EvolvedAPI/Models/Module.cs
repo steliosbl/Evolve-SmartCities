@@ -1,17 +1,19 @@
 ﻿namespace EvolvedAPI.Models
 {
+    using System;
+
     public class Module
     {
-        public Module(int id, int hubid, double longitude, double latitude, int redduration, int orangeduration, int greenduration, string currentstate)
+        [SDatabase.Attributes.SDBConstructor]
+        public Module(int id, int hubid, double longitude, double latitude, string currentState, DateTime lastUpdated, TimeSpan duration)
         {
             this.ID = id;
             this.HubID = hubid;
             this.Longitude = longitude;
             this.Latitude = latitude;
-            this.RedDuration = redduration;
-            this.OrangeDuration = orangeduration;
-            this.GreenDuration = greenduration;
-            this.CurrentState = currentstate;
+            this.CurrentState = currentState;
+            this.LastUpdated = lastUpdated;
+            this.Duration = duration;
         }
 
         public int ID { get; private set; }
@@ -22,12 +24,10 @@
 
         public double Latitude { get; private set; }
 
-        public int RedDuration { get; private set; }
-
-        public int OrangeDuration { get; private set; }
-
-        public int GreenDuration { get; private set; }
-
         public string CurrentState { get; private set; }
+
+        public DateTime LastUpdated { get; private set; }
+
+        public TimeSpan Duration { get; private set; }
     }
 }
