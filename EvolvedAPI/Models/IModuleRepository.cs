@@ -11,6 +11,6 @@
         Module Get(double longitude, double latitude);
         IEnumerable<Module> Get(double longitude, double latitude, double radius);
         bool Remove(int id);
-        Module Update(int id, string state, DateTime timestamp, TimeSpan duration);
+        Module Update(UpdateInfo info);
     }
 }

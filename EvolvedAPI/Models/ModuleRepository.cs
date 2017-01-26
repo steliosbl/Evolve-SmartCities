@@ -139,20 +139,20 @@
             return false;
         }
 
-        public Module Update(int id, string state, DateTime timestamp, TimeSpan duration)
+        public Module Update(UpdateInfo info)
         {
-            if (this.Exists(id))
+            if (this.Exists(info.ID))
             {
                 using (var cmd = new MySqlCommand(string.Format("UPDATE {0} SET currentstate=@state,duration=@duration WHERE id=@id", TableName), this.connection))
                 {
                     cmd.Prepare();
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@state", state);
-                    cmd.Parameters.AddWithValue("@duration", duration.Subtract(DateTime.Now.Subtract(timestamp)));
+                    cmd.Parameters.AddWithValue("@id", info.ID);
+                    cmd.Parameters.AddWithValue("@state", info.State);
+                    cmd.Parameters.AddWithValue("@duration", info.Duration.Subtract(DateTime.Now.Subtract(info.Timestamp)));
                     cmd.ExecuteNonQuery();
                 }
                 
-                return this.Get(id);
+                return this.Get(info.ID);
             }
 
             return null;
