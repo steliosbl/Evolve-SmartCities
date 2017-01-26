@@ -8,6 +8,8 @@
         bool Add(Module module);
         IEnumerable<Module> GetAll();
         Module Get(int id);
+        Module Get(double longitude, double latitude);
+        IEnumerable<Module> Get(double longitude, double latitude, double radius);
         bool Remove(int id);
     }
 }

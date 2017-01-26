@@ -85,6 +85,45 @@
             return null;
         }
 
+        public Module Get(double longitude, double latitude)
+        {
+            if (this.Exists(longitude, latitude))
+            {
+                using (var cmd = new MySqlCommand(string.Format("SELECT * FROM {0} WHERE longitude=@long AND latitude=@lat", TableName), this.connection))
+                {
+                    cmd.Prepare();
+                    cmd.Parameters.AddWithValue("@long", longitude);
+                    cmd.Parameters.AddWithValue("@lat", latitude);
+                    return SDatabase.MySQL.Convert.DeserializeObject<Module>(cmd);
+                }
+            }
+
+            return null;
+        }
+
+        public IEnumerable<Module> Get(double longitude, double latitude, double radius)
+        {
+            var res = new List<Module>();
+            using (var cmd = new MySqlCommand(string.Format("SELECT * FROM {0} WHERE longitude BETWEEN @minlong AND @maxlong AND latitude between @minlat AND @maxlat", TableName), this.connection))
+            {
+                cmd.Prepare();
+                cmd.Parameters.AddWithValue("@minlong", longitude - radius);
+                cmd.Parameters.AddWithValue("@maxlong", longitude + radius);
+                cmd.Parameters.AddWithValue("@minlat", latitude - radius);
+                cmd.Parameters.AddWithValue("@maxlat", latitude + radius);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        res.Add(new Module(reader.GetInt32(0), reader.GetInt32(1), reader.GetDouble(2), reader.GetDouble(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetString(7)));
+                    }
+                }
+            }
+
+            return res;
+        }
+
         public bool Remove(int id)
         {
             if (this.Exists(id))
