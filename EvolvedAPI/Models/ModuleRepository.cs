@@ -62,7 +62,7 @@
                 {
                     while (reader.Read())
                     {
-                        res.Add(new Module(reader.GetInt32(0), reader.GetInt32(1), reader.GetDouble(2), reader.GetDouble(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetString(7)));
+                        res.Add(new Module(reader.GetInt32(0), reader.GetInt32(1), reader.GetDouble(2), reader.GetDouble(3), reader.GetString(4), reader.GetDateTime(5), reader.GetTimeSpan(6)));
                     }
                 }
             }
@@ -116,7 +116,7 @@
                 {
                     while (reader.Read())
                     {
-                        res.Add(new Module(reader.GetInt32(0), reader.GetInt32(1), reader.GetDouble(2), reader.GetDouble(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetString(7)));
+                        res.Add(new Module(reader.GetInt32(0), reader.GetInt32(1), reader.GetDouble(2), reader.GetDouble(3), reader.GetString(4), reader.GetDateTime(5), reader.GetTimeSpan(6)));
                     }
                 }
             }
@@ -137,6 +137,25 @@
             }
 
             return false;
+        }
+
+        public Module Update(int id, string state, DateTime timestamp, TimeSpan duration)
+        {
+            if (this.Exists(id))
+            {
+                using (var cmd = new MySqlCommand(string.Format("UPDATE {0} SET currentstate=@state,duration=@duration WHERE id=@id", TableName), this.connection))
+                {
+                    cmd.Prepare();
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@state", state);
+                    cmd.Parameters.AddWithValue("@duration", duration.Subtract(DateTime.Now.Subtract(timestamp)));
+                    cmd.ExecuteNonQuery();
+                }
+                
+                return this.Get(id);
+            }
+
+            return null;
         }
 
         public bool Exists(int id)
