@@ -29,6 +29,8 @@ namespace EvolvedAPI
         {
             // Add framework services.
             services.AddMvc();
+
+            services.AddSingleton<Models.IModuleRepository, Models.ModuleRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
