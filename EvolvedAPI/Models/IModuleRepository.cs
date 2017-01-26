@@ -5,10 +5,9 @@
 
     public interface IModuleRepository
     {
-        void Add(Module module);
+        bool Add(Module module);
         IEnumerable<Module> GetAll();
-        Module Find(int id);
-        Module Remove(int id);
-        void Update(Module module);
+        Module Get(int id);
+        bool Remove(int id);
     }
 }

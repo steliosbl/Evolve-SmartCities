@@ -1,4 +1,4 @@
-﻿namespace DistributionCommon
+﻿namespace EvolvedAPI
 {
     using System;
     using System.IO;
