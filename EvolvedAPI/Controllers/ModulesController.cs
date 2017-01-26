@@ -67,6 +67,22 @@
             }
         }
 
-
+        [HttpPatch]
+        public IActionResult Update([FromBody]UpdateInfo info)
+        {
+            if (info != null)
+            {
+                var res = this.ModuleRepository.Update(info);
+                if (res == null)
+                {
+                    return NotFound();
+                }
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
