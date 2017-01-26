@@ -23,8 +23,8 @@
             return ModuleRepository.GetAll();
         }
 
-        [HttpGet("{id}", Name = "GetModule")]
-        public IActionResult GetById(string id)
+        [HttpGet]
+        public IActionResult GetById([RequiredFromQuery]string id)
         {
             int moduleID;
             if (Int32.TryParse(id, out moduleID))
@@ -46,38 +46,20 @@
         }
 
         [HttpGet]
-        public IActionResult GetByCoords([FromQuery]string longitude, [FromQuery]string latitude)
-        {
-            double clongitude;
-            double clatitude;
-            if (Double.TryParse(longitude, out clongitude) && Double.TryParse(latitude, out clatitude))
-            {
-                var module = this.ModuleRepository.Get(clongitude, clatitude);
-                if (module != null)
-                {
-                    return new ObjectResult(module);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpGet]
-        public IActionResult GetByCoordRadius([FromQuery]string longitude, [FromQuery]string latitude, [FromQuery]string radius)
+        public IActionResult GetByCoords([RequiredFromQuery]string longitude, [RequiredFromQuery]string latitude, [FromQuery]string radius)
         {
             double clongitude;
             double clatitude;
             double cradius;
 
+            if (string.IsNullOrEmpty(radius))
+            {
+                radius = "0";
+            }
+
             if (Double.TryParse(longitude, out clongitude) && Double.TryParse(latitude, out clatitude) && Double.TryParse(radius, out cradius))
             {
-                return new ObjectResult(this.ModuleRepository.Get(clongitude, clatitude, cradius);
+                return new ObjectResult(this.ModuleRepository.Get(clongitude, clatitude, cradius));
             }
             else
             {
@@ -85,9 +67,6 @@
             }
         }
 
-        //public IActionResult Create([FromBody]string hub_id, [FromBody]string tlm_id, [FromBody]string state, [FromBody]string timestamp)
-        //{
 
-        //}
     }
 }
