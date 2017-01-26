@@ -31,19 +31,6 @@
 
         public bool Add(Module module)
         {
-            //using (var cmd = new MySqlCommand(string.Format("INSERT INTO {0} VALUES (@id, @hubid, @long, @lat, @red, @orange, @green, @current);", TableName), this.connection))
-            //{
-            //    cmd.Prepare();
-            //    cmd.Parameters.AddWithValue("@id", module.ID);
-            //    cmd.Parameters.AddWithValue("@hubid", module.HubID);
-            //    cmd.Parameters.AddWithValue("@long", module.Longitude);
-            //    cmd.Parameters.AddWithValue("@lat", module.Latitude);
-            //    cmd.Parameters.AddWithValue("@red", module.RedDuration);
-            //    cmd.Parameters.AddWithValue("@orange", module.OrangeDuration);
-            //    cmd.Parameters.AddWithValue("@green", module.GreenDuration);
-            //    cmd.Parameters.AddWithValue("@current", module.CurrentState);
-            //}
-
             if (!this.Exists(module.ID))
             {
                 SDatabase.MySQL.Convert.SerializeObject(this.connection, module, TableName);
