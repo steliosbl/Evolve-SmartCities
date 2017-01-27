@@ -42,19 +42,10 @@
 
         public IEnumerable<Module> GetAll()
         {
-            var res = new List<Module>();
             using (var cmd = new MySqlCommand(string.Format("SELECT * FROM {0}", TableName), this.connection))
             {
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        res.Add(new Module(reader.GetInt32(0), reader.GetInt32(1), reader.GetDouble(2), reader.GetDouble(3), reader.GetString(4), reader.GetDateTime(5), reader.GetTimeSpan(6)));
-                    }
-                }
+                return SDatabase.MySQL.Convert.DeserializeObjects<Module>(cmd);
             }
-
-            return res;
         }
 
         public Module Get(int id)
@@ -90,7 +81,6 @@
 
         public IEnumerable<Module> Get(double longitude, double latitude, double radius)
         {
-            var res = new List<Module>();
             using (var cmd = new MySqlCommand(string.Format("SELECT * FROM {0} WHERE longitude BETWEEN @minlong AND @maxlong AND latitude between @minlat AND @maxlat", TableName), this.connection))
             {
                 cmd.Prepare();
@@ -99,16 +89,8 @@
                 cmd.Parameters.AddWithValue("@minlat", latitude - radius);
                 cmd.Parameters.AddWithValue("@maxlat", latitude + radius);
 
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        res.Add(new Module(reader.GetInt32(0), reader.GetInt32(1), reader.GetDouble(2), reader.GetDouble(3), reader.GetString(4), reader.GetDateTime(5), reader.GetTimeSpan(6)));
-                    }
-                }
+                return SDatabase.MySQL.Convert.DeserializeObjects<Module>(cmd);
             }
-
-            return res;
         }
 
         public bool Remove(int id)
